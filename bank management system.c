@@ -1,6 +1,8 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<windows.h>
+#include <math.h>
+
 int i,j;
 int main_exit;
 void menu();
@@ -485,14 +487,103 @@ void see(void)
             }
 
 }
+// Function to calculate the Equated Monthly Installment (EMI)
+float calculate_emi(float loan_amount, float interest_rate, int tenure_years) {
+    float monthly_rate = interest_rate / (12 * 100); // Convert annual rate to monthly rate
+    int total_months = tenure_years * 12;            // Convert tenure to months
 
+    return (loan_amount * monthly_rate * pow(1 + monthly_rate, total_months)) / 
+           (pow(1 + monthly_rate, total_months) - 1);
+}
+
+// Function to apply for a loan
+void apply_loan() {
+    int loan_choice, tenure_years;
+    float loan_amount, emi, interest_rate;
+    char confirm;
+    
+    system("cls");
+    printf("\t\t\t\xB2\xB2\xB2 APPLY FOR LOAN  \xB2\xB2\xB2\n\n");
+    
+    printf("Select loan type:\n");
+    printf("1. Personal Loan (10%% annual interest)\n");
+    printf("2. Home Loan (6%% annual interest)\n");
+    printf("3. Education Loan (4%% annual interest)\n");
+    printf("Enter your choice (1-3): ");
+    scanf("%d", &loan_choice);
+
+    if (loan_choice < 1 || loan_choice > 3) {
+        printf("Invalid loan choice! Returning to main menu.\n");
+        return;
+    }
+
+    printf("Enter the loan amount: $");
+    scanf("%f", &loan_amount);
+
+    if (loan_amount <= 0) {
+        printf("Invalid loan amount! Returning to main menu.\n");
+        return;
+    }
+
+    printf("Enter the loan tenure (in years): ");
+    scanf("%d", &tenure_years);
+
+    if (tenure_years <= 0) {
+        printf("Invalid loan tenure! Returning to main menu.\n");
+        return;
+    }
+
+    // Determine the interest rate based on loan choice
+    switch (loan_choice) {
+        case 1:
+            interest_rate = 10.0; // Personal Loan
+            printf("\nYou have selected Personal Loan with 10%% annual interest.\n");
+            break;
+        case 2:
+            interest_rate = 6.0; // Home Loan
+            printf("\nYou have selected Home Loan with 6%% annual interest.\n");
+            break;
+        case 3:
+            interest_rate = 4.0; // Education Loan
+            printf("\nYou have selected Education Loan with 4%% annual interest.\n");
+            break;
+    }
+
+    // Calculate the EMI
+    emi = calculate_emi(loan_amount, interest_rate, tenure_years);
+
+    // Display loan summary
+    printf("\nLoan Summary:\n");
+    printf("Loan Amount: $%.2f\n", loan_amount);
+    printf("Interest Rate: %.2f%% per annum\n", interest_rate);
+    printf("Tenure: %d years\n", tenure_years);
+    printf("Equated Monthly Installment (EMI): $%.2f\n", emi);
+    printf("Total Repayment Amount (including interest): $%.2f\n", emi * tenure_years * 12);
+
+    // Confirm loan application
+    printf("\nDo you want to proceed with the loan application? (Y/N): ");
+    getchar(); // To consume any leftover newline character from previous inputs
+    scanf("%c", &confirm);
+
+    if (confirm == 'Y' || confirm == 'y') {
+        printf("\nLoan application submitted successfully!\n");
+        printf("Your monthly EMI will be $%.2f for %d months.\n", emi, tenure_years * 12);
+    } else {
+        printf("\nLoan application canceled.\n");
+    }
+
+    // Wait for user input before returning to the main menu
+    printf("\nPress any key to return to the main menu...\n");
+    getchar();
+    getchar();
+}
 void menu(void){
     int choice;
     system("cls");
     system("color 9");
     printf("\n\n\t\t\tCUSTOMER ACCOUNT BANKING MANAGEMENT SYSTEM");
     printf("\n\n\n\t\t\t\xB2\xB2\xB2\xB2\xB2\xB2\xB2 WELCOME TO THE MAIN MENU \xB2\xB2\xB2\xB2\xB2\xB2\xB2");
-    printf("\n\n\t\t1.Create new account\n\t\t2.Update information of existing account\n\t\t3.For transactions\n\t\t4.Check the details of existing account\n\t\t5.Removing existing account\n\t\t6.View customer's list\n\t\t7.Transfer funds\n\t\t8.Exit\n\n\n\n\n\t\t Enter your choice:");
+    printf("\n\n\t\t1.Create new account\n\t\t2.Update information of existing account\n\t\t3.For transactions\n\t\t4.Check the details of existing account\n\t\t5.Removing existing account\n\t\t6.View customer's list\n\t\t7.Transfer funds\n\t\t8.Apply for loan\n\t\t9.Exit\n\n\n\n\n\t\t Enter your choice:");
     scanf("%d", &choice);
 
     system("cls");
@@ -519,6 +610,9 @@ void menu(void){
             transfer(); 
         break;
         case 8:
+            apply_loan();
+        break;
+        case 9:
             exit(0); 
         break;
     }   
