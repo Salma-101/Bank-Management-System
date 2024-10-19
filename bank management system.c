@@ -23,7 +23,7 @@ struct {
     struct date deposit;
     struct date withdraw;
 
-    }add,upd,check,rem,transaction;
+    }add,upd,temp,check,rem,transaction;
 
 float interest(float t,float amount,int rate)
 {
@@ -614,23 +614,55 @@ void menu(void){
         case 7:
             transfer(); 
         break;
-        case 8:
-            
-            printf("Enter Account No.: ");
-            scanf("%d", &check.acc_no);
-            if(add.acc_no==check.acc_no)
-            {
-               printf("Enter phone: ");
-                scanf("%d", &add.phone);
-                printf("Enter Date Of Birth: ");
-                scanf("%d/%d/%d", &add.dob.month,&add.dob.day,&add.dob.year);
-                apply_loan();
-            }
-            else {
-                printf("Account no. does not exist.");
-            }
-            
+        case 8: {
+    FILE *ptr;
+    int account_found = 0;  // Flag to check if account exists
+
+    ptr = fopen("record.dat", "r");
+    if (ptr == NULL) {
+        printf("Error opening file!\n");
+        Sleep(3000);
+        menu();  // Return to menu if file cannot be opened
         break;
+    }
+
+    printf("Enter Account No.: ");
+    scanf("%d", &check.acc_no);
+
+    // Loop through the file to find the matching account number
+    while (fscanf(ptr, "%d %s %d/%d/%d %d %s %s %lf %s %f %d/%d/%d\n", 
+            &add.acc_no, add.name, &add.dob.month, &add.dob.day, &add.dob.year, 
+            &add.age, add.address, add.citizenship, &add.phone, add.acc_type, 
+            &add.amt, &add.deposit.month, &add.deposit.day, &add.deposit.year) != EOF) {
+        
+        if (add.acc_no == check.acc_no) {
+            // Account number found
+            account_found = 1;
+            printf("Account found!\n");
+
+            // Get phone number and DOB from the user
+            printf("Enter phone: ");
+            scanf("%lf", &add.phone);  // Use %lf for double
+            printf("Enter Date Of Birth (MM/DD/YYYY): ");
+            scanf("%d/%d/%d", &add.dob.month, &add.dob.day, &add.dob.year);
+
+            // Call apply_loan() function after collecting details
+            apply_loan();
+
+            break;  // Exit the loop after finding the account
+        }
+    }
+
+    if (!account_found) {
+        printf("Account no. does not exist.\n");
+        Sleep(3000);  // Delay for 3 seconds
+        menu();       // Return to the main menu
+    }
+
+    fclose(ptr); // Close the file after processing
+    break;
+}
+
         case 9:
             exit(0); 
         break;
@@ -756,7 +788,7 @@ int main()
                     {printf("\nInvalid!");
                     fordelay(1000000000);
                     system("cls");
-                    goto login_try;}
+                    }
 
         }
         return 0;
