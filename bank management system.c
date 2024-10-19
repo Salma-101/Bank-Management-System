@@ -514,6 +514,8 @@ void apply_loan() {
 
     if (loan_choice < 1 || loan_choice > 3) {
         printf("Invalid loan choice! Returning to main menu.\n");
+        fordelay(1000000000); // Optional delay to give the user time to read the message
+        menu(); // Call the menu function to return to the main menu
         return;
     }
 
@@ -547,6 +549,8 @@ void apply_loan() {
             interest_rate = 4.0; // Education Loan
             printf("\nYou have selected Education Loan with 4%% annual interest.\n");
             break;
+        default:
+            printf("Enter ");
     }
 
     // Calculate the EMI
