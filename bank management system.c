@@ -615,7 +615,21 @@ void menu(void){
             transfer(); 
         break;
         case 8:
-            apply_loan();
+            
+            printf("Enter Account No.: ");
+            scanf("%d", &check.acc_no);
+            if(add.acc_no==check.acc_no)
+            {
+               printf("Enter phone: ");
+                scanf("%d", &add.phone);
+                printf("Enter Date Of Birth: ");
+                scanf("%d/%d/%d", &add.dob.month,&add.dob.day,&add.dob.year);
+                apply_loan();
+            }
+            else {
+                printf("Account no. does not exist.");
+            }
+            
         break;
         case 9:
             exit(0); 
