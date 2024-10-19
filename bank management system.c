@@ -573,9 +573,10 @@ void apply_loan() {
     }
 
     // Wait for user input before returning to the main menu
-    printf("\nPress any key to return to the main menu...\n");
+    printf("\nPress enter to return to the main menu...\n");
     getchar();
     getchar();
+    menu();
 }
 void menu(void){
     int choice;
